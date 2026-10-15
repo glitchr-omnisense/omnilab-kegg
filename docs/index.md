@@ -77,7 +77,7 @@ license" (Pathway Solutions), and "Academic users who utilize KEGG for providing
 requested to obtain an academic service provider license." Glitchr is not an academic user and
 holds no licence, and none was accepted on its behalf. So:
 
-- checked against the service, on 2026-10-16, only while writing, a handful of calls to learn the
+- checked against the service, on 2026-10-15, only while writing, a handful of calls to learn the
   format: `get` of C07481, D00528, R00200, map00010, hsa00010 and `ec:2.7.1.40`; `find` of compound,
   reaction, pathway and enzyme; `conv` from ChEBI and from a PubChem SID; `info/kegg`; a 404
   (`get/C99999`), a 400 (`get/X12345`), an empty `find` and `conv`. The fixtures in `Tests/Fixtures/`

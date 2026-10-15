@@ -18,7 +18,7 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
 /**
- * Fixtures: excerpts of rest.kegg.jp's answers seen on 2026-10-16 while
+ * Fixtures: excerpts of rest.kegg.jp's answers seen on 2026-10-15 while
  * the format was checked (caffeine C07481 and D00528, pyruvate kinase's
  * reaction R00200 and enzyme 2.7.1.40, glycolysis map00010; the
  * references, BRITE trees and gene lists cut short), conv's line for
