@@ -2,10 +2,11 @@
 
 > **Not tested live.** KEGG's API at rest.kegg.jp is "made available only for academic use by
 > academic users"; non-academic use of KEGG needs a commercial licence from Pathway Solutions.
-> Glitchr is not an academic user, so this package was not exercised against the service: the
-> answers' format was checked on a handful of calls on 2026-10-15 while it was written (the test
-> fixtures are trimmed excerpts of them), and no live check is kept. Use it only if your use is
-> academic, or under a licence. Details in [docs/index.md](docs/index.md#verified-and-not).
+> This package was not exercised against the service: the answers' format was checked on a
+> handful of calls on 2026-10-15 while it was written (the test fixtures are trimmed excerpts of
+> them), and no live check is kept. Whoever runs it must be an academic user or hold a licence:
+> that is theirs to obtain (see [Responsibility](#responsibility)). Details in
+> [docs/index.md](docs/index.md#verified-and-not).
 
 KEGG, the Kyoto Encyclopedia of Genes and Genomes, for
 [glitchr/omnilab](https://github.com/glitchr-studio/omnilab): a compound (`C07481`, caffeine), a
@@ -50,5 +51,18 @@ KEGG's "Non-academic use of KEGG" and need a licence from Pathway Solutions, whi
 KEGG's FTP sites. Academic users who use KEGG to provide a service need
 an academic service provider licence. At most three calls a second, or the caller is blocked. Cite KEGG: Kanehisa, M. and Goto, S., KEGG: Kyoto Encyclopedia of
 Genes and Genomes, Nucleic Acids Res. 28, 27-30 (2000), and the latest paper kegg.jp lists.
+
+## Responsibility
+
+This package is an independent, unofficial client: it is not affiliated with, endorsed by or
+sponsored by Kanehisa Laboratories and Pathway Solutions (KEGG). It reaches their service on behalf of whoever runs it, and it does not
+redistribute their data beyond the short excerpts recorded as test fixtures. Its MIT licence
+covers this package's code only and grants no right to the service or to its data.
+
+Whoever installs and runs this package is responsible for complying with the terms above, for
+obtaining whatever they require (an account, a key, a licence or subscription, an attribution or
+a citation, a rate limit to respect), and for any use made of what it returns. The authors
+publish it free of charge, make no commercial use of it, and accept no liability for how it is
+used (see [LICENSE](LICENSE)).
 
 License (of this package's code): MIT.

@@ -74,8 +74,9 @@ and CAS number, and ChEBI gives KEGG ids back: PubChem or ChEBI -> KEGG by ChEBI
 academic use by academic users. Non-academic users are requested to follow the guideline shown in
 Non-academic use of KEGG." KEGG's legal page: "Non-academic use of KEGG requires a commercial
 license" (Pathway Solutions), and "Academic users who utilize KEGG for providing services are
-requested to obtain an academic service provider license." Glitchr is not an academic user and
-holds no licence, and none was accepted on its behalf. So:
+requested to obtain an academic service provider license." The authors hold no KEGG licence and
+make no commercial use of this package; whoever runs it is the one who must be an academic user or
+hold a licence. So:
 
 - checked against the service, on 2026-10-15, only while writing, a handful of calls to learn the
   format: `get` of C07481, D00528, R00200, map00010, hsa00010 and `ec:2.7.1.40`; `find` of compound,
