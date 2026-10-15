@@ -1,0 +1,46 @@
+{
+    "name": "omnilab/kegg",
+    "type": "library",
+    "description": "Omnilab KEGG: a compound (C07481), a drug (D00528), a reaction (R00200), a pathway map (map00010, hsa00010) or an enzyme (2.7.1.40) by its KEGG identifier - names, formula and masses, a reaction's equation, a pathway's class and description, an enzyme's class and systematic name - the same thing in CAS, ChEBI, ChEMBL and Rhea as identifiers, its reactions, pathways, enzymes, compounds and GO terms as related things; a compound by its ChEBI id; a search; through KEGG's REST API (rest.kegg.jp), for academic use by academic users only.",
+    "keywords": [
+        "science",
+        "chemistry",
+        "kegg",
+        "compounds",
+        "reactions",
+        "pathways",
+        "enzymes",
+        "omnilab"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marco Meyer",
+            "email": "marco.meyer@glitchr.io"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "glitchr/omnilab": "^1.0@dev",
+        "symfony/http-client": "^6.4|^7.0|^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omnilab\\Kegg\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Omnilab\\Kegg\\Tests\\": "Tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
