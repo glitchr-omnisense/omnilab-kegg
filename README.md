@@ -9,7 +9,7 @@
 > [docs/index.md](docs/index.md#verified-and-not).
 
 KEGG, the Kyoto Encyclopedia of Genes and Genomes, for
-[glitchr/omnilab](https://github.com/glitchr-studio/omnilab): a compound (`C07481`, caffeine), a
+[omniscient/omnilab](https://github.com/glitchr-studio/omnilab): a compound (`C07481`, caffeine), a
 drug (`D00528`), a reaction (`R00200`), a pathway map (`map00010`, `hsa00010`) or an enzyme
 (`2.7.1.40`) by its KEGG identifier - names, formula and masses, a reaction's equation, a pathway's
 class and description, an enzyme's class and systematic name; the same thing in CAS, ChEBI, ChEMBL
