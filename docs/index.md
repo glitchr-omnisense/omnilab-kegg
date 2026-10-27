@@ -1,5 +1,11 @@
 # omnilab/kegg
 
+KEGG's REST API (Kanehisa Laboratories: `https://rest.kegg.jp/`) for
+[omnisense/omnilab](https://github.com/glitchr-omnisense/omnilab): compounds, drugs, reactions,
+pathway maps and enzymes by KEGG id - formula, masses, equations, classes; CAS, ChEBI, ChEMBL and
+Rhea ids as cross-references; reactions, pathways, enzymes and compounds as related things -, as
+entities; a search. No key; for academic use by academic users only.
+
 **Not tested live**: KEGG's API is for academic use by academic users only (see
 [Verified, and not](#verified-and-not)).
 
@@ -18,6 +24,47 @@ $kegg = (new KeggSourceFactory($httpClient))->create([
     'throttle' => 0.34,                // optional: KEGG blocks a caller above three calls a second
 ]);
 ```
+
+## Credentials
+
+No key. But KEGG's API "is made available only for academic use by academic users": a
+non-academic user needs a licence from Pathway Solutions, and an academic user who uses KEGG to
+provide a service an academic service provider licence. The user is the one who must be an
+academic user or hold a licence; the package asks for nothing and checks nothing.
+
+## Options
+
+The factory's options, with the defaults it applies (`KeggSourceFactory`):
+
+| Option | Type | Default | Required | Effect |
+|---|---|---|---|---|
+| `databases` | `list<string>` | `[compound]` | no | what `search()` searches, in this order: `compound`, `drug`, `reaction`, `pathway`, `enzyme` (another is an `\InvalidArgumentException` at `create()`) |
+| `mailto` | `?string` | null | no | a contact address, sent in the User-Agent |
+| `user_agent` | `?string` | null | no | the whole User-Agent, in place of the one made from `mailto` |
+| `throttle` | `float` | `0.34` | no | seconds left between two calls: KEGG blocks a caller above three a second |
+| `base_uri` | `string` | `https://rest.kegg.jp/` | no | the API the source calls |
+
+## Capabilities
+
+`capabilities()` answers `entity`, `search`, `structure`, `cross_references`; an operation it does not answer throws `NotSupportedException` before any call.
+
+| Capability | Supported | |
+|---|---|---|
+| `entity` | yes | a compound or drug (`C07481`, `D00528`), a reaction (`R00200`), a pathway map (`map00010`, `hsa00010`), an enzyme (`2.7.1.40`), or a ChEBI id with its prefix (KEGG's `conv`, then `get`); another scheme refused before any call |
+| `search` | yes | `find` in each configured database (a domain keeps its databases), the lines joined and paged by offset here (`find` does not page) |
+| `series` | no |  |
+| `products` | no |  |
+| `occurrences` | no |  |
+| `datasets` | no |  |
+| `jobs` | no |  |
+| `open` | no |  |
+| `structure` | yes | a compound's or a drug's image is its structure (KEGG's GIF); a pathway's is its map |
+| `cross_references` | yes | CAS, ChEBI and ChEMBL ids, the KEGG entry it is the same as, a reaction's Rhea id |
+| `forecast` | no |  |
+| `historical` | no |  |
+| `area` | no |  |
+| `station` | no |  |
+| `cloud_cover` | no |  |
 
 ## The schemes
 
@@ -68,6 +115,67 @@ A KEGG reaction carries its Rhea id (`DBLINKS RHEA: 18160`), and a Rhea reaction
 and CAS number, and ChEBI gives KEGG ids back: PubChem or ChEBI -> KEGG by ChEBI. Not walked live
 (see below).
 
+## Example
+
+Not run against KEGG (its API is for academic use by academic users, and the authors hold no
+licence). The script below reads KEGG's answers of 2026-10-15 as the package's tests keep them,
+through a `MockHttpClient`; with `HttpClient::create()` in place of `$http`, it calls KEGG.
+
+```php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Omnilab\Kegg\KeggSourceFactory;
+use Omnilab\Model\Scheme;
+use Omnilab\Source\Query;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
+
+// KEGG's answers of 2026-10-15 as the package's tests keep them (no call to KEGG: its API is for academic users only).
+$fixtures = __DIR__.'/vendor/omnilab/kegg/Tests/Fixtures/';
+$http = new MockHttpClient(static function (string $method, string $url) use ($fixtures): MockResponse {
+    $file = str_replace(['/', ':'], ['-', '-'], ltrim((string) parse_url($url, PHP_URL_PATH), '/')).'.txt';
+
+    return is_file($fixtures.$file) ? new MockResponse((string) file_get_contents($fixtures.$file)) : new MockResponse('', ['http_code' => 404]);
+});
+$kegg = (new KeggSourceFactory($http))->create(['throttle' => 0, 'databases' => ['compound', 'drug']]);
+
+$caffeine = $kegg->entity('C07481');
+echo $caffeine->id, ' ', $caffeine->label, ': ', $caffeine->value('molecular_formula'), ', ', $caffeine->property('molecular_weight'), ', CAS ', $caffeine->identifier(Scheme::CAS), ', ChEBI ', $caffeine->identifier(Scheme::CHEBI), "\n";
+echo 'R00200: ', $kegg->entity('rn:R00200')?->value('definition'), ', Rhea ', $kegg->entity('rn:R00200')?->identifier(Scheme::RHEA), "\n";
+foreach ($kegg->search(new Query('caffeine', limit: 3)) as $found) {
+    echo '  ', $found->id, '  ', $found->label, "\n";
+}
+```
+
+```
+kegg:C07481 Caffeine: C8H10N4O2, 194.19 g/mol, CAS 58-08-2, ChEBI 27732
+R00200: ATP + Pyruvate <=> ADP + Phosphoenolpyruvate, Rhea 18160
+  kegg:C07481  Caffeine
+  kegg:C13403  Sodium caffeine benzoate
+  kegg:D00528  Caffeine (USP)
+```
+
+(run on 2026-10-27 in the harness image, with no network, on those fixtures)
+
+```yaml
+# config/packages/omnilab.yaml - for academic use by academic users, or under KEGG's licence
+omnilab:
+    sources:
+        kegg: { factory: kegg, options: { mailto: '%env(OMNILAB_MAILTO)%', databases: [compound, drug] } }
+```
+
+## Errors
+
+Every call goes through `HttpSource`: a 404 or a 410 (and a 204) is null - an empty page for a list -; a 429 is a `RateLimitedException` (`retryAfter` from `Retry-After`); a 5xx, a time-out or a host that does not answer an `UnavailableException`; any other 4xx a `ProviderException` with its `status` and what the service said; an answer that is not JSON a `ProviderException`, a web page answered for JSON an `UnavailableException`.
+
+KEGG's own: an unknown entry is a 404 (null); an unknown ChEBI id or a text nothing matches an
+empty answer (null, an empty page); a malformed request a 400 (`ProviderException`); past three
+calls a second KEGG blocks the caller - a 429 is a `RateLimitedException`, another refusal a
+`ProviderException` as KEGG answers it. Before any call: an identifier of a scheme this package
+does not read (`NotSupportedException`).
+
 ## Verified, and not
 
 **Not tested live.** KEGG's API page says: "KEGG API at rest.kegg.jp is made available only for
@@ -88,4 +196,18 @@ hold a licence. So:
   answers to a 429, the `Collector` walks above, `search()` across several databases. No section of
   the workspace's `.samples/live.php` calls KEGG.
 
+On 2026-10-27 the example above ran on the fixtures only, with no network.
+
 Run it live only if your use is academic, or under KEGG's licence.
+
+## Responsibility
+
+This package is an independent, unofficial client: it is not affiliated with, endorsed by or
+sponsored by Kanehisa Laboratories or Pathway Solutions. KEGG is "an original database product,
+copyright Kanehisa Laboratories", "not a public database"; its API is for academic use by academic
+users only, other uses need a licence, and KEGG is to be cited, as the README's
+[Terms of use](https://github.com/glitchr-omnisense/omnilab-kegg#terms-of-use) and
+[kegg.jp/kegg/legal.html](https://www.kegg.jp/kegg/legal.html) say. Whoever runs the package is
+the one who must be an academic user or hold a licence, and is responsible for any use made of what
+it returns: see the README's
+[Responsibility](https://github.com/glitchr-omnisense/omnilab-kegg#responsibility) section.
