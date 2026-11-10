@@ -52,6 +52,17 @@ KEGG's FTP sites. Academic users who use KEGG to provide a service need
 an academic service provider licence. At most three calls a second, or the caller is blocked. Cite KEGG: Kanehisa, M. and Goto, S., KEGG: Kyoto Encyclopedia of
 Genes and Genomes, Nucleic Acids Res. 28, 27-30 (2000), and the latest paper kegg.jp lists.
 
+## Usage policy
+
+Declared as data in [`policy.json`](policy.json) (read at https://www.kegg.jp/kegg/rest/ on 2026-11-10), and honoured on every request by the
+core: a limit reached waits when its window ends within `max_wait` seconds, else the request is not
+sent ([Usage policies](https://github.com/glitchr-omnisense/omnilab/blob/1.x/docs/policies.md)).
+
+- Limits: 3 a second.
+- Licence: not stated; commercial use: contract.
+- Credit: not required: KEGG, Kanehisa Laboratories (https://www.kegg.jp/kegg/).
+- Needs: nothing.
+
 ## Responsibility
 
 This package is an independent, unofficial client: it is not affiliated with, endorsed by or

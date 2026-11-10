@@ -1,0 +1,49 @@
+{
+    "$schema": "https://github.com/glitchr-omnisense/contracts/blob/1.x/resources/usage-policy.schema.json",
+    "provider": "kegg",
+    "rateLimits": [
+        {
+            "max": 3,
+            "window": "second",
+            "every": 1,
+            "scope": "application",
+            "operations": [],
+            "note": "KEGG API page: \"Please limit your API calls up to 3 times per second. Otherwise, your access will be blocked.\""
+        }
+    ],
+    "concurrency": null,
+    "rights": {
+        "commercial": "contract",
+        "openSourceRequired": null,
+        "caching": {
+            "permission": "unknown",
+            "maxTtl": null
+        },
+        "storage": "unknown",
+        "redistribution": "contract",
+        "attribution": {
+            "required": false,
+            "text": "KEGG, Kanehisa Laboratories",
+            "url": "https://www.kegg.jp/kegg/",
+            "where": [
+                "source"
+            ]
+        },
+        "licence": null
+    },
+    "requirements": {
+        "key": false,
+        "userAgent": {
+            "required": false,
+            "pattern": null
+        }
+    },
+    "provenance": {
+        "terms": "https://www.kegg.jp/kegg/legal.html",
+        "policy": "https://www.kegg.jp/kegg/rest/",
+        "verifiedAt": "2026-11-10",
+        "declaredBy": "maintainer",
+        "contact": null,
+        "notes": "Read 2026-11-10: the KEGG API page (rest.kegg.jp is \"made available only for academic use by academic users\"; non-academic users follow the legal page; 3 calls/second or blocked) and the legal page (KEGG is copyright Kanehisa Laboratories; non-academic use requires a commercial licence from Pathway Solutions; academic users offering services based on KEGG need an academic service-provider licence, hence redistribution: contract). No data licence, no attribution rule stated. No rate headers on a test call."
+    }
+}
