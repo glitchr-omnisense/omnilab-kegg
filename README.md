@@ -42,6 +42,41 @@ omnilab:
                 throttle: 0.34                 # KEGG blocks a caller above three calls a second
 ```
 
+## Install and a first call
+
+```sh
+composer require omnilab/kegg
+```
+
+KEGG's API is made available only for academic use by academic users; any other use needs a licence
+from Pathway Solutions. This first call needs none: caffeine (C07481), its answer recorded on
+2026-10-15 and trimmed, so nothing leaves the process (Symfony's `MockHttpClient` answers in place
+of the service). A real call gives the factory no client (it makes its own) and the source
+`['mailto' => 'you@example.org']`.
+
+```php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Omnilab\Kegg\KeggSourceFactory;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
+
+// The service's answer, recorded: no account, and nothing leaves the process.
+$http = new MockHttpClient(new MockResponse("ENTRY       C07481                      Compound\nNAME        Caffeine;\n            1,3,7-Trimethylxanthine\n"
+    ."FORMULA     C8H10N4O2\nEXACT_MASS  194.0804\nMOL_WEIGHT  194.19\nDBLINKS     CAS: 58-08-2\n            ChEBI: 27732\n///\n"));
+$kegg = (new KeggSourceFactory($http))->create([]);
+$caffeine = $kegg->entity('C07481');
+echo $caffeine->label, ', ', $caffeine->value('molecular_formula'), ', ', $caffeine->property('molecular_weight'), "\n";
+```
+
+Its output:
+
+```
+Caffeine, C8H10N4O2, 194.19 g/mol
+```
+
 ## Terms of use
 
 KEGG is "an original database product, copyright Kanehisa Laboratories", and "not a public
